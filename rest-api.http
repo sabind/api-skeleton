@@ -1,0 +1,105 @@
+### Test health route return healthy
+GET {{server}}/v1/__health
+Accept: */*
+Cache-Control: no-cache
+
+> {%
+
+client.test("/v1/__health", function() {
+  client.assert(response.status === 200, "Response status code is not 200");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+  client.assert(response.body.status === "ok", "Response payload is incorrect");
+});
+
+%}
+
+### Check redirect is working
+
+GET {{server}}/__health
+Accept: */*
+Cache-Control: no-cache
+
+> {%
+
+client.test("Default to v1 API", function() {
+  client.assert(response.status === 200, "Response status code is not 200");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+  client.assert(response.body.status === "ok", "Response payload is incorrect");
+});
+
+%}
+
+### Check basic auth is required
+
+GET {{server}}/v1/users
+Accept: */*
+Cache-Control: no-cache
+
+> {%
+
+client.test("reading users requires auth - 401 without auth", function() {
+  client.assert(response.status === 401, "Response status code is not 401");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+});
+
+%}
+
+### If basic auth is supplies users are authenticated
+
+GET {{server}}/v1/users
+Accept: */*
+Authorization:
+Cache-Control: no-cache
+
+> {%
+
+client.test("reading users requires auth - 401 without auth", function() {
+  client.assert(response.status === 401, "Response status code is not 401");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+});
+
+%}
+
+### Create first user
+
+POST {{server}}/v1/users
+Accept: */*
+Authorization:
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "username": "dan",
+  "password": "password"
+}
+
+> {%
+
+client.test("sign up by creating a user", function() {
+  client.assert(response.status === 201, "Response status code is not 201");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+});
+
+%}
+
+### Create duplicate user
+
+POST {{server}}/v1/users
+Accept: */*
+Authorization:
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "username": "dan",
+  "password": "password"
+}
+
+> {%
+
+client.test("usernames cannot be duplicated - 409 Conflict", function() {
+  client.assert(response.status === 409, "Response status code is not 409");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+});
+
+%}
