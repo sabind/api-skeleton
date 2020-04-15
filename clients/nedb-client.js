@@ -19,7 +19,7 @@ function failFast(error) {
 
 }
 
-const Users = new Datastore({filename: './data/users.json', autoload: true, onload: failFast.bind({collection: 'users', operation: 'Loaded'})});
+const Users = new Datastore({filename: './data/users.db', autoload: true, onload: failFast.bind({collection: 'users', operation: 'Loaded'})});
 
 module.exports = {
     Users

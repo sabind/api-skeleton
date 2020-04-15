@@ -3,13 +3,15 @@
 const Hapi = require('@hapi/hapi');
 const Joi = require('@hapi/joi')
     .extend(require('@hapi/joi-date'));
+const Bcrypt = require('bcrypt');
+
 const Database = require('./clients/nedb-client');
 
 const Users = Database.Users;
 
 const validate = async (request, username, password) => {
-    const findUser = new Promise((resolve, reject) => {
-        Users.findOne({username}, {username: 1, password: 1}, (err, data) => {
+    const user = await new Promise((resolve, reject) => {
+        Users.findOne({username}, {}, (err, data) => {
             if (err) {
                 return reject(err);
             }
@@ -17,12 +19,10 @@ const validate = async (request, username, password) => {
             resolve(data);
         });
     });
-    const user = await findUser;
+    const isValid = await Bcrypt.compare(password, user.password);
+    const credentials = {_id: user._id, username: user.username};
 
-    const isValid = password === user.password;
-    const credentials = { _id: user._id, username: user.username };
-
-    return { isValid, credentials };
+    return {isValid, credentials};
 };
 
 const init = async () => {

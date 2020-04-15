@@ -3,6 +3,8 @@
 const Joi = require('@hapi/joi');
 const Cors = require('../../utils/cors');
 
+const HealthValidations = require('../../validations/health');
+
 const healthRoute = {
     name: 'health-route',
     version: '1.0.0',
@@ -16,11 +18,8 @@ const healthRoute = {
             options: {
                 auth: false,
                 response: {
-                    failAction: 'log',
                     status: {
-                        200: {
-                            status: Joi.string().valid('no')
-                        }
+                        200: HealthValidations.get
                     }
                 },
                 cors: Cors

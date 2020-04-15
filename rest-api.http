@@ -44,22 +44,6 @@ client.test("reading users requires auth - 401 without auth", function() {
 
 %}
 
-### If basic auth is supplies users are authenticated
-
-GET {{server}}/v1/users
-Accept: */*
-Authorization:
-Cache-Control: no-cache
-
-> {%
-
-client.test("reading users requires auth - 401 without auth", function() {
-  client.assert(response.status === 401, "Response status code is not 401");
-  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
-});
-
-%}
-
 ### Create first user
 
 POST {{server}}/v1/users
@@ -99,6 +83,23 @@ Content-Type: application/json
 
 client.test("usernames cannot be duplicated - 409 Conflict", function() {
   client.assert(response.status === 409, "Response status code is not 409");
+  client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
+});
+
+%}
+
+
+### If basic auth is supplied users are authenticated
+
+GET {{server}}/v1/users
+Accept: */*
+Authorization: Basic dan password
+Cache-Control: no-cache
+
+> {%
+
+client.test("reading users requires auth - 200 with auth", function() {
+  client.assert(response.status === 200, "Response status code is not 200");
   client.assert(response.contentType.mimeType === 'application/json', "Response content type is not application/json");
 });
 
