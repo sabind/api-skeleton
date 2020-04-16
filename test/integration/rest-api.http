@@ -1,4 +1,5 @@
 ### Test health route return healthy
+
 GET {{server}}/v1/__health
 Accept: */*
 Cache-Control: no-cache

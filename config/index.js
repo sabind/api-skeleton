@@ -30,14 +30,20 @@ const Config = Convict({
     forceHttps: {
         doc: 'Is HTTPS required?',
         format: Boolean,
-        default: false,
+        default: true,
         env: 'FORCE_HTTPS'
+    },
+    newestVersion: {
+        doc: 'Newest API Version',
+        format: '*',
+        default: 'v1',
+        env: 'NEWEST_VERSION'
     }
 });
 
 // Load environment dependent configuration
 const env = Config.get('env');
-Config.loadFile('./config/' + env + '.json');
+Config.loadFile(`${__dirname}/${env}.json`);
 
 // Perform validation
 Config.validate({allowed: 'strict'});
