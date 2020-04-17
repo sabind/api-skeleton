@@ -1,14 +1,17 @@
 # API Skeleton
 
 This project outlines a very basic API skeleton.
-It features the following:
+The API relies on strong input validation (in [`validations`](validations)) to maintain data integrity in the DB.
+The API funcationallity can be extended by adding more [`routes`](routes) and [`controllers`](controllers).
 
-- Basic Authentication
+It features the following :
+
+- Basic Authentication to protect unwanted access
 - A user repository
-- A health route
+- A health route 
 - Swagger Documentation
 - Integration Tests (for IntelliJ Users)
-- Unit Tests (@hapi/lab + @hapi/code)
+- Unit Tests
 - A configuration system that supports `<env>.json`, `args` and `ENV_VARS` to manage start up parameters.
 The available options should work with all deployment environments as well as providing secure ways to configure the application for production deploys.
 
