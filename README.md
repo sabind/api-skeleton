@@ -6,7 +6,8 @@ The API funcationallity can be extended by adding more [`routes`](routes) and [`
 
 It features the following :
 
-- Basic Authentication to protect unwanted access
+- Basic Authentication to protect unwanted access to some routes
+- API versioning implemented as a path parameter
 - A user repository
 - A health route 
 - Swagger Documentation
