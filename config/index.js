@@ -35,7 +35,7 @@ const Config = Convict({
         format: Boolean,
         default: true,
         env: 'FORCE_HTTPS',
-        arg: 'https
+        arg: 'https'
     },
     newestVersion: {
         doc: 'Newest API Version',
