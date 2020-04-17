@@ -1,6 +1,9 @@
 const Datastore = require('nedb');
 const Config = require('../config');
 
+const pathPrefix = Config.get('database.nedb.path');
+const env = Config.get('env');
+
 function failFast(error) {
     if (error) {
         console.error('FATAL Datastore Error: ', error);
@@ -20,7 +23,7 @@ function failFast(error) {
 }
 
 const Users = new Datastore({
-    filename: `./data/${Config.get('env') === 'test' ? 'test-' : ''}users.db`,
+    filename: `${pathPrefix}/${env === 'test' ? 'test-' : ''}users.db`,
     autoload: true,
     onload: failFast.bind({collection: 'users', operation: 'Loaded'})
 });

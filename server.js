@@ -15,78 +15,75 @@ const server = Hapi.server({
     host: 'localhost'
 });
 
-exports.init = async () => {
+server.validator(Joi);
+if (Config.get('forceHttps')) {
+    server.register({plugin: require('hapi-require-https')});
+}
 
-
-    server.validator(Joi);
-
-    if (Config.get('forceHttps')) {
-        await server.register({plugin: require('hapi-require-https')});
-    }
-
-    if (Config.get('env') !== 'test') {
-        await server.register([
-            // Register the logger first
-            {
-                plugin: require('@hapi/good'),
-                options: {
-                    ops: {
-                        interval: 1000
-                    },
-                    reporters: {
-                        myConsoleReporter: [
-                            {
-                                module: '@hapi/good-squeeze',
-                                name: 'Squeeze',
-                                args: [{log: '*', response: '*', ops: '*'}]
-                            },
-                            {
-                                module: '@hapi/good-console'
-                            },
-                            'stdout'
-                        ]
-                    }
-                }
-            },
-            require('@hapi/inert'),
-            require('@hapi/vision'),
-            {
-                plugin: require('hapi-swagger'),
-                options: {
-                    info: {
-                        title: 'API Documentation',
-                        version: Package.version,
-                        description: 'API skeleton sample with basic auth and registration'
-                    }
+if (Config.get('env') !== 'test') {
+    server.register([
+        // Register the logger first
+        {
+            plugin: require('@hapi/good'),
+            options: {
+                ops: {
+                    interval: 1000
+                },
+                reporters: {
+                    myConsoleReporter: [
+                        {
+                            module: '@hapi/good-squeeze',
+                            name: 'Squeeze',
+                            args: [{log: '*', response: '*', ops: '*'}]
+                        },
+                        {
+                            module: '@hapi/good-console'
+                        },
+                        'stdout'
+                    ]
                 }
             }
-        ]);
-    }
-
-    const validate = async (request, username, password) => {
-        const user = await new Promise((resolve, reject) => {
-            Users.findOne({username}, {}, (err, data) => {
-                if (err) {
-                    return reject(err);
+        },
+        require('@hapi/inert'),
+        require('@hapi/vision'),
+        {
+            plugin: require('hapi-swagger'),
+            options: {
+                info: {
+                    title: 'API Documentation',
+                    version: Package.version,
+                    description: 'API skeleton sample with basic auth and registration'
                 }
-
-                resolve(data);
-            });
-        });
-        const isValid = await Bcrypt.compare(password, user.password);
-        const credentials = {_id: user._id, username: user.username};
-
-        return {isValid, credentials};
-    };
-    await server.register(require('@hapi/basic'));
-    server.auth.strategy('simple', 'basic', {validate: validate});
-
-    await server.register([
-        {plugin: require('./routes/version')},
-        {plugin: require('./routes/v1/health')},
-        {plugin: require('./routes/v1/users')}
+            }
+        }
     ]);
+}
 
+const validate = async (request, username, password) => {
+    const user = await new Promise((resolve, reject) => {
+        Users.findOne({username}, {}, (err, data) => {
+            if (err) {
+                return reject(err);
+            }
+
+            resolve(data);
+        });
+    });
+    const isValid = await Bcrypt.compare(password, user.password);
+    const credentials = {_id: user._id, username: user.username};
+
+    return {isValid, credentials};
+};
+server.register(require('@hapi/basic'));
+server.auth.strategy('simple', 'basic', {validate: validate});
+
+server.register([
+    {plugin: require('./routes/version')},
+    {plugin: require('./routes/v1/health')},
+    {plugin: require('./routes/v1/users')}
+]);
+
+exports.init = async () => {
     await server.initialize();
     return server;
 };

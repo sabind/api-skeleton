@@ -43,6 +43,17 @@ const Config = Convict({
         default: 'v1',
         env: 'NEWEST_VERSION',
         arg: 'version'
+    },
+    database: {
+        nedb: {
+            path: {
+                doc: 'Path to database directory',
+                format: '*',
+                default: './data',
+                env: 'DATABASE_NEDB_PATH',
+                arg: 'database-nedb-path'
+            }
+        }
     }
 });
 
