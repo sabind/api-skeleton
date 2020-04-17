@@ -42,7 +42,7 @@ To start a server locally run `npm start` from the root of the project.
 
 The server features a robust configuration implementation leveraging an npm package called `convict`
 You can read more about how it works [here](https://www.npmjs.com/package/convict).
-The configuration is docmented in the `config/config.js` file.
+The configuration is docmented in the [`config/index.js`](config/index.js) file.
 
 ### Documentation
 
