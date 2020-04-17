@@ -6,19 +6,22 @@ const Config = Convict({
         doc: 'The application environment.',
         format: ['production', 'development', 'test'],
         default: 'development',
-        env: 'NODE_ENV'
+        env: 'NODE_ENV',
+        arg: 'env'
     },
     ip: {
         doc: 'The IP address to bind.',
         format: 'ipaddress',
         default: '127.0.0.1',
-        env: 'IP_ADDRESS'
+        env: 'IP_ADDRESS',
+        arg: 'ipaddr'
     },
     domain: {
         doc: 'The domain hosting the app',
         format: '*',
         default: 'localhost',
-        env: 'DOMAIN'
+        env: 'DOMAIN',
+        arg: 'domain'
     },
     port: {
         doc: 'The port to bind.',
@@ -31,13 +34,15 @@ const Config = Convict({
         doc: 'Is HTTPS required?',
         format: Boolean,
         default: true,
-        env: 'FORCE_HTTPS'
+        env: 'FORCE_HTTPS',
+        arg: 'https
     },
     newestVersion: {
         doc: 'Newest API Version',
-        format: '*',
+        format: ['v1'],
         default: 'v1',
-        env: 'NEWEST_VERSION'
+        env: 'NEWEST_VERSION',
+        arg: 'version'
     }
 });
 
