@@ -24,7 +24,7 @@
     "@hapi/joi-date": "^2.0.1",
     "@hapi/vision": "^6.0.0",
     "bcrypt": "^4.0.1",
-    "convict": "^5.2.0",
+    "convict": "^6.2.4",
     "hapi-require-https": "^5.0.0",
     "hapi-swagger": "^13.0.0",
     "nedb": "^1.8.0"
